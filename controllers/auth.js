@@ -39,7 +39,9 @@ export const login = async(req, res, next) => {
         const isPasswordCorrect = await bcrypt.compare(req.body.password, user.password)
         if(!isPasswordCorrect) return next(createErr(400, "Wrong password or username"))
 
-        res.status(200).send(user)
+        const {password, isAdmin, ...otherDetails} = user
+
+        res.status(200).send(...otherDetails)
 
     } catch (error) { 
         const err = createErr(500, 'lihat stack error', error)
