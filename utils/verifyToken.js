@@ -45,7 +45,7 @@ export const verifyAdmin = (req,res,next) => {
     jwt.verify(token, process.env.JWT, (err, user) => {
         if (err) return next(createErr(403, "token is invalid"));
         
-        if(user.isAdmin){
+        if(req.params.id == user.id && user.isAdmin){
             next();
         }
         else {
