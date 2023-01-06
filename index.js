@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import mongoose from 'mongoose';
 import authRoute from "./routes/auth.js";
 import hotelRoute from './routes/hotels.js';
+import userRoute from './routes/users.js';
 import cookieParser from 'cookie-parser';
 
 const app = express();
@@ -27,6 +28,7 @@ app.use(express.json());
 // middleware
 app.use('/api/v1/auth', authRoute);
 app.use('/api/v1/hotel', hotelRoute);
+app.use('/api/v1/user', userRoute);
 
 // handle error midddleware api
 app.use((err, req, res, next) => {
