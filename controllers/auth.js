@@ -3,6 +3,7 @@ import User from "../models/User.js";
 import { createErr } from "../utils/error.js";
 import moment from "moment-timezone";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
 export const register = async(req, res, next) => {
     try {
@@ -39,9 +40,23 @@ export const login = async(req, res, next) => {
         const isPasswordCorrect = await bcrypt.compare(req.body.password, user.password)
         if(!isPasswordCorrect) return next(createErr(400, "Wrong password or username"))
 
+        // token jwt
+        const token = jwt.sign({
+            id : user._id,
+            isAdmin: user.isAdmin
+        }, process.env.JWT)
+
         const {password, isAdmin, ...otherDetails} = user._doc
 
-        res.status(200).send({...otherDetails})
+        res
+            .cookie("access_token", token, {
+                httpOnly: true
+            })
+            .status(200)
+            .json({
+                details: {...otherDetails},
+                isAdmin
+            })
 
     } catch (error) { 
         const err = createErr(500, 'lihat stack error', error)
