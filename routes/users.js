@@ -5,24 +5,24 @@ import { verifyAdmin, verifyToken, verifyUser } from '../utils/verifyToken.js';
 const router = express.Router();
 
 // check router
-router.get("/check-auth", verifyToken, (req, res, next) => {
-    res.send('you autheticated')
-})
-router.get('/checkuser/:id', verifyUser, (req, res, next) => {
-    res.send('user autenticated')
-})
-router.get('/checkadmin/:id', verifyAdmin, (req, res, next) => {
-    res.send('admin autenticated')
-})
+// router.get("/check-auth", verifyToken, (req, res, next) => {
+//     res.send('you autheticated')
+// })
+// router.get('/checkuser/:id', verifyUser, (req, res, next) => {
+//     res.send('user autenticated')
+// })
+// router.get('/checkadmin/:id', verifyAdmin, (req, res, next) => {
+//     res.send('admin autenticated')
+// })
 
 // update
-router.put('/:id', updateUser)
+router.put('/:id', verifyUser, updateUser)
 
 // delete
-router.delete('/:id', deleteUser)
+router.delete('/:id', verifyUser, deleteUser)
 
 // get detail
-router.get('/:id', getDetailUser)
+router.get('/:id', verifyUser ,getDetailUser)
 
 // get all
 router.get('/', getUsers)

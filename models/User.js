@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-
 import timezone from 'mongoose-timezone';
 
 const UserSchema = new mongoose.Schema({
