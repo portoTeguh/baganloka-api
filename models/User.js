@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-
 import timezone from 'mongoose-timezone';
 
 const UserSchema = new mongoose.Schema({
@@ -17,7 +16,7 @@ const UserSchema = new mongoose.Schema({
     required: true,
   },
   isAdmin: {
-    type: String,
+    type: Boolean,
     default: false
   },
   createdAt: {

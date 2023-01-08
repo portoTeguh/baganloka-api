@@ -46,7 +46,7 @@ app.use((err, req, res, next) => {
 
 // middleware selain route di atas
 app.use('*', function(req, res){
-    res.send('not found', 404);
+    res.send('not found, please check your http methord and route', 404);
 })
 
 app.listen(8800, () => {
