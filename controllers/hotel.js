@@ -1,4 +1,5 @@
 import Hotel from "../models/Hotel.js";
+import Room from "../models/Room.js";
 import { createErr } from "../utils/error.js";
 
 export const createHotel = async (req, res, next) => {
@@ -58,7 +59,18 @@ export const getDetailHotel = async (req, res, next) => {
 
 export const getHotels = async (req, res, next) => {
     try {
-        const hotels = await Hotel.find()
+        // to get all data
+        // const hotels = await Hotel.find()
+
+        // to get by params request
+        const {min, max, ...other} = req.query
+        const hotels = await Hotel.find(
+          {...other, cheapestPrice: {
+            $gt: min | 1,
+            $lt: max || 999
+          }}
+        ).limit(req.query.limit)
+
         res.status(200).json(hotels); 
     } catch (error) {
         const err = createErr(404, "not found hotels!", error);
@@ -86,10 +98,10 @@ export const countByCity = async (req, res, next) => {
 export const countyByType = async (req, res, next) => {
   try {
     const hotelCount = await Hotel.countDocuments({ type: "Hotel" })
-    const apartementCount = await Hotel.countDocuments({ type: "apartement" })
-    const resortCount = await Hotel.countDocuments({ type: "resort" })
-    const villaCount = await Hotel.countDocuments({ type: "villa" })
-    const cabinCount = await Hotel.countDocuments({ type: "cabin" })
+    const apartementCount = await Hotel?.countDocuments({ type: "apartement" })
+    const resortCount = await Hotel?.countDocuments({ type: "resort" })
+    const villaCount = await Hotel?.countDocuments({ type: "villa" })
+    const cabinCount = await Hotel?.countDocuments({ type: "cabin" })
 
     res.status(200).json([
       { type: "hotel", count: hotelCount },
@@ -101,6 +113,20 @@ export const countyByType = async (req, res, next) => {
 
   } catch (error) {
     const err = createErr(404, "not found type!", error);
+    next(err)
+  }
+}
+
+export const getHotelRooms = async (req, res, next) => {
+  try {
+      const hotel = await Hotel.findById(req.params.id)
+      const list = await Promise.all(hotel.rooms.map((room) => {
+        return Room.findById(room)
+      }))
+      
+      res.status(200).json(list)
+  } catch (error) {
+    const err = createErr(404, "get hotel rooms error!", error);
     next(err)
   }
 }
